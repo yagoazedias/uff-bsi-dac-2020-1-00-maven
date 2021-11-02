@@ -7,6 +7,8 @@ package hello;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -46,6 +48,104 @@ public class HelloServlet extends HttpServlet {
         }
     }
 
+    private String defineBodyMessage(String lang, int hour, String nome, String tratamento) {
+        String msg = "";
+
+        if(lang==null)
+            lang = "pt";
+
+        switch (lang) {
+            case "pt":
+                if (hour < 12) {
+                    msg = "Bom dia, ";
+                } else if (hour > 12 && hour < 18) {
+                    msg = "Boa tarde, ";
+                } else {
+                    msg = "Boa noite, ";
+                }
+                if (tratamento.equals("Sr.") || tratamento.equals("Sra.")) {
+                    msg = msg + " " + tratamento + " ";
+                }
+                break;
+            case "en":
+                if (hour < 12) {
+                    msg = "Good morning, ";
+                } else if (hour > 12 && hour < 18) {
+                    msg = "Good afternoon, ";
+                } else {
+                    msg = "Good evening, ";
+                }
+                if (tratamento.equals("Sr.")) {
+                    msg = msg + " " + "Mr." + " ";
+                } else if (tratamento.equals("Sra.")) {
+                    msg = msg + " " + "Mrs" + " ";
+                }
+                break;
+            case "fr":
+                if (hour < 12) {
+                    msg = "Bonjour, ";
+                } else if (hour > 12 && hour < 18) {
+                    msg = "Bon après-midi, ";
+                } else {
+                    msg = "Bonne soirée, ";
+                }
+                if (tratamento.equals("Sr.")) {
+                    msg = msg + " " + "Monsieur." + " ";
+                } else if (tratamento.equals("Sra.")) {
+                    msg = msg + " " + "Mme." + " ";
+                }
+                break;
+            case "de":
+                if (hour < 12) {
+                    msg = "Guten Morgen, ";
+                } else if (hour > 12 && hour < 18) {
+                    msg = "Guten Tag, ";
+                } else {
+                    msg = "Gute Nacht, ";
+                }
+                if (tratamento.equals("Sr.")) {
+                    msg = msg + " " + "Herr." + " ";
+                } else if (tratamento.equals("Sra.")) {
+                    msg = msg + " " + "Frau." + " ";
+                }
+                break;
+            case "su":
+                if (hour < 12) {
+                    msg = "Habari za asubuhi, ";
+                } else if (hour > 12 && hour < 18) {
+                    msg = "Habari za jioni, ";
+                } else {
+                    msg = "Usiku mwema, ";
+                }
+                if (tratamento.equals("Sr.")) {
+                    msg = msg + " " + "Bwana." + " ";
+                } else if (tratamento.equals("Sra.")) {
+                    msg = msg + " " + "Bi." + " ";
+                }
+                break;
+            case "ja":
+                if (hour < 12) {
+                    msg = "おはようございます, ";
+                } else if (hour > 12 && hour < 18) {
+                    msg = "こんにちは, ";
+                } else {
+                    msg = "おやすみなさい, ";
+                }
+                if (tratamento.equals("Sr.")) {
+                    msg = msg + " " + "氏." + " ";
+                } else if (tratamento.equals("Sra.")) {
+                    msg = msg + " " + "夫人." + " ";
+                }
+                break;
+        }
+
+        if(nome==null)
+            nome = "Fulano";
+
+        msg = msg+nome+"!";
+        return msg;
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -58,36 +158,16 @@ public class HelloServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String msg = "";
-        
-        String lang = request.getParameter("lang");
-        if(lang==null)
-            lang = "pt";
-        switch(lang){
-            case "pt":
-                msg = "Alô, ";
-                break;
-            case "en":
-                msg = "Hello, ";
-                break;
-            case "fr":
-                msg = "Bonjour, ";
-                break;
-            case "su":
-                msg = "Habari, ";
-                break;
-            case "ja":
-                msg = "こんにちは, ";
-                break;
-        }
-        
-        String nome = request.getParameter("nome");
 
-        if(nome==null)
-            nome = "Fulano";
-        
-        msg = msg+nome+"!";
+        String msg = "";
+        int hour = LocalDateTime.now().getHour();
+        String lang = request.getParameter("lang");
+
+        String nome = request.getParameter("nome");
+        String tratamento = request.getParameter("tratamento");
+        String color = request.getParameter("color");
+
+        msg = this.defineBodyMessage(lang, hour, nome, tratamento);
 
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -95,11 +175,11 @@ public class HelloServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HelloServlet</title>");            
+            out.println("<title>Servlet HelloServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet HelloServlet</h1>");
-            out.println("<p>" + msg + "</p>");
+            out.println(String.format("<p style=\"color:%s\">%s</p>", "red", msg));
             out.println("</body>");
             out.println("</html>");
         }
@@ -116,38 +196,16 @@ public class HelloServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String msg = "";
-        
-        String lang = request.getParameter("lang");
-        if(lang==null)
-            lang = "pt";
-        switch(lang){
-            case "pt":
-                msg = "Alô, ";
-                break;
-            case "en":
-                msg = "Hello, ";
-                break;
-            case "fr":
-                msg = "Bonjour, ";
-                break;
-            case "de":
-                msg = "Hallo, ";
-                break;
-            case "su":
-                msg = "Habari, ";
-                break;
-            case "ja":
-                msg = "こんにちは, ";
-                break;
-        }
-        
-        String nome = request.getParameter("nome");
 
-        if(nome==null || nome.equals(""))
-            nome = "Fulano";
-        
-        msg = msg+nome+"!";
+        String msg = "";
+        int hour = LocalDateTime.now().getHour();
+        String lang = request.getParameter("lang");
+
+        String nome = request.getParameter("nome");
+        String tratamento = request.getParameter("tratamento");
+        String color = request.getParameter("color");
+
+        msg = this.defineBodyMessage(lang, hour, nome, tratamento);
 
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -155,11 +213,11 @@ public class HelloServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HelloServlet</title>");            
+            out.println("<title>Servlet HelloServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet HelloServlet</h1>");
-            out.println("<p>" + msg + "</p>");
+            out.println(String.format("<p style=\"color:%s\">%s</p>", "red", msg));
             out.println("</body>");
             out.println("</html>");
         }
