@@ -179,7 +179,7 @@ public class HelloServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet HelloServlet</h1>");
-            out.println(String.format("<p style=\"color:%s\">%s</p>", "red", msg));
+            out.println(String.format("<p style=\"color:%s\">%s</p>", color, msg));
             out.println("</body>");
             out.println("</html>");
         }
@@ -217,7 +217,7 @@ public class HelloServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet HelloServlet</h1>");
-            out.println(String.format("<p style=\"color:%s\">%s</p>", "red", msg));
+            out.println(String.format("<p style=\"color:%s\">%s</p>", color, msg));
             out.println("</body>");
             out.println("</html>");
         }
